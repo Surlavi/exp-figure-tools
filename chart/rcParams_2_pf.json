@@ -1,0 +1,129 @@
+for O_strategy
+{
+    "backend": "GTKAgg",
+
+    "font.family": "serif",
+    "font.serif": ["Times", "Palatino", "New Century Schoolbook", "Bookman", "Computer Modern Roman"],
+    "font.sans-serif": ["Helvetica", "Avant Garde", "Computer Modern Sans serif"],
+    "font.cursive": ["Zapf Chancery"],
+    "font.monospace": ["Courier", "Computer Modern Typewriter"],
+    "text.usetex": true,
+    "text.latex.unicode": true,
+
+    "axes.labelsize": 24,
+    "axes.linewidth": 0.75,
+
+    "figure.figsize": [6.3, 4],
+    "figure.subplot.left": 0.17,
+    "figure.subplot.right": 0.96,
+    "figure.subplot.bottom": 0.18,
+    "figure.subplot.top": 0.90,
+    "figure.dpi": 150,
+
+    "font.size": 22,
+    "legend.fontsize": 14 ,
+    "xtick.labelsize": 17,
+    "ytick.labelsize": 17,
+
+    "lines.linewidth": 0.75,
+    "lines.markersize": 8,
+    "savefig.dpi": 600
+}
+
+for ACCESS_TIMES:
+{
+    "backend": "GTKAgg",
+
+    "font.family": "serif",
+    "font.serif": ["Times", "Palatino", "New Century Schoolbook", "Bookman", "Computer Modern Roman"],
+    "font.sans-serif": ["Helvetica", "Avant Garde", "Computer Modern Sans serif"],
+    "font.cursive": ["Zapf Chancery"],
+    "font.monospace": ["Courier", "Computer Modern Typewriter"],
+    "text.usetex": true,
+    "text.latex.unicode": true,
+
+    "axes.labelsize": 24,
+    "axes.linewidth": 0.75,
+
+    "figure.figsize": [6.3, 4],
+    "figure.subplot.left": 0.23,
+    "figure.subplot.right": 0.96,
+    "figure.subplot.bottom": 0.18,
+    "figure.subplot.top": 0.90,
+    "figure.dpi": 150,
+
+    "font.size": 22,
+    "legend.fontsize": 17 ,
+    "xtick.labelsize": 17,
+    "ytick.labelsize": 17,
+
+    "lines.linewidth": 0.75,
+    "lines.markersize": 8,
+    "savefig.dpi": 600
+}
+
+for RE
+
+{
+    "backend": "GTKAgg",
+
+    "font.family": "serif",
+    "font.serif": ["Times", "Palatino", "New Century Schoolbook", "Bookman", "Computer Modern Roman"],
+    "font.sans-serif": ["Helvetica", "Avant Garde", "Computer Modern Sans serif"],
+    "font.cursive": ["Zapf Chancery"],
+    "font.monospace": ["Courier", "Computer Modern Typewriter"],
+    "text.usetex": true,
+    "text.latex.unicode": true,
+
+    "axes.labelsize": 24,
+    "axes.linewidth": 0.75,
+
+    "figure.figsize": [6.3, 4],
+    "figure.subplot.left": 0.15,
+    "figure.subplot.right": 0.96,
+    "figure.subplot.bottom": 0.18,
+    "figure.subplot.top": 0.90,
+    "figure.dpi": 150,
+
+    "font.size": 22,
+    "legend.fontsize": 17 ,
+    "xtick.labelsize": 17,
+    "ytick.labelsize": 17,
+
+    "lines.linewidth": 0.75,
+    "lines.markersize": 8,
+    "savefig.dpi": 600
+}
+
+
+for SPEED:
+{
+    "backend": "GTKAgg",
+
+    "font.family": "serif",
+    "font.serif": ["Times", "Palatino", "New Century Schoolbook", "Bookman", "Computer Modern Roman"],
+    "font.sans-serif": ["Helvetica", "Avant Garde", "Computer Modern Sans serif"],
+    "font.cursive": ["Zapf Chancery"],
+    "font.monospace": ["Courier", "Computer Modern Typewriter"],
+    "text.usetex": true,
+    "text.latex.unicode": true,
+
+    "axes.labelsize": 24,
+    "axes.linewidth": 0.75,
+
+    "figure.figsize": [6.3, 4],
+    "figure.subplot.left": 0.14,
+    "figure.subplot.right": 0.96,
+    "figure.subplot.bottom": 0.18,
+    "figure.subplot.top": 0.90,
+    "figure.dpi": 150,
+
+    "font.size": 22,
+    "legend.fontsize": 17 ,
+    "xtick.labelsize": 17,
+    "ytick.labelsize": 17,
+
+    "lines.linewidth": 0.75,
+    "lines.markersize": 8,
+    "savefig.dpi": 600
+}

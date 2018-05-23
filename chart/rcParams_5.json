@@ -1,0 +1,30 @@
+{
+    "backend": "GTKAgg",
+
+    "font.family": "serif",
+    "font.serif": ["Times", "Palatino", "New Century Schoolbook", "Bookman", "Computer Modern Roman"],
+    "font.sans-serif": ["Helvetica", "Avant Garde", "Computer Modern Sans serif"],
+    "font.cursive": ["Zapf Chancery"],
+    "font.monospace": ["Courier", "Computer Modern Typewriter"],
+    "text.usetex": true,
+    "text.latex.unicode": true,
+
+    "axes.labelsize": 36,
+    "axes.linewidth": 0.75,
+
+    "figure.figsize": [10.5, 5.5],
+    "figure.subplot.left": 0.09,
+    "figure.subplot.right": 0.98,
+    "figure.subplot.bottom": 0.15,
+    "figure.subplot.top": 0.96,
+    "figure.dpi": 150,
+
+    "font.size": 5,
+    "legend.fontsize": 28,
+    "xtick.labelsize": 32,
+    "ytick.labelsize": 32,
+
+    "lines.linewidth": 1.5,
+    "lines.markersize": 20,
+    "savefig.dpi": 600
+}
