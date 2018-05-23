@@ -190,12 +190,12 @@ class DrawingCore:
 
         plt.savefig(self.output_file)
         # output eps
-        gp = self.output_file.split('.')
-        if gp[-1] == 'pdf':
-            eps_name = ".".join(gp[0:-1]) + ".eps"
-        else:
-            eps_name = self.output_file + ".eps"
-        plt.savefig(eps_name)
+        # gp = self.output_file.split('.')
+        # if gp[-1] == 'pdf':
+        #     eps_name = ".".join(gp[0:-1]) + ".eps"
+        # else:
+        #     eps_name = self.output_file + ".eps"
+        # plt.savefig(eps_name)
         plt.close()
 
         if self.settings['errorBar']:

@@ -22,7 +22,7 @@
     "pivotTable": true,
     "pivotTable.category": "Dataset",
     "pivotTable.independentVariable": "Memory", // x axis
-    "pivotTable.value": "MOPS", // y axis
+    "pivotTable.value": "Score", // y axis
 
     "pivotTable.point": "mean", // default: mean, other: median
 
@@ -44,7 +44,7 @@
     "pivotTable": true,
     "pivotTable.category": "Dataset",
     "pivotTable.independentVariable": "Memory", // x axis
-    "pivotTable.value": "MOPS", // y axis
+    "pivotTable.value": "Score", // y axis
 
     "pivotTable.point": "mean", // default: mean, other: median
     "pivotTable.errorBar": "min-max"

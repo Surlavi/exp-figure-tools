@@ -1,45 +1,110 @@
-快速将实验结果批量生成实验图的工具
+ExpFigureTool是快速将实验结果批量生成实验图（折线图，柱状图）的工具
 
 基于Python 2和[matplotlib](https://matplotlib.org/)
 
----
 ## 环境要求
 - Python 2
 - matplotlib >= 2.0
 - Latex环境
 - Windows下建议使用wsl
 
-## 使用说明
+## 使用教程
 
 - 执行脚本run.py，脚本将读取list.json中的数据列表，根据配置绘制图像
-- list.json格式
-```
-[
+
+- list.json文件中包含一个json数组，这个数组有若干个FigItem组成，每一个FigItem表示由一个数据文件绘制一张实验图
+
+  ```json
+  [
+      {
+          // FigItem
+      },
+      {
+          // Another FigItem
+      }
+      // ...
+  ]
+  ```
+
+- 每一个FigItem包含以下信息
+
+    ```json
     {
-        "file": "", // 数据文件名，数据格式要求见下
-        "y_label": "", // 纵轴label
-        // 以下为非必需项
+        "file": "", // 数据文件名
+        // 以下信息非必须，有默认值
         "output": "", // 输出文件名，默认为输入文件名后缀换为pdf
-        "style": 1, // 预设的格式，可选1~4，默认为1，分别对应chart文件夹中rcParams_x.json，纸张大小分别为8x4, 6.3x4，12x9.6,type为4的时候是长宽比14:6
+        "style": 1, // 预设的格式，可选1~4，默认为1，分别对应chart文件夹中
         "chart.type": "", // 输出图表类型，可选"line"(折线图)或"bar"(柱状图)，默认为折线图
-        "xtick.lim": [0, 0.8], // x轴显示范围
-        "xtick.interval": 0.2, // x轴刻度间隔
-        "ytick.lim": [0, 0.8], // y轴，同上
-        "ytick.interval": 0.2,
-        "marker": false, // 是否显示数据点，默认为true
         "separator": "," // 数据分割字符，默认为空白字符（空格、制表符）
     }
-]
-```
+    ```
 
-- 输入数据格式
-  - 参考a.dat及b.dat，要求为文本文件，后缀名任意
-  - 输入数据为表格，以空白字符分割（空格、制表符）；或者其他任意字符分割，请在config中指明
-  - 第一行为标题信息
-  - 第一列为对应的x值，第一列第一个元素用于显示x label
-  - 其余列为不同组下的y值，每列第一个元素用于显示图例
-- 其他说明
-  - 所有文本支持latex语法，如`$\alpha$`
-  - 注意json语法，如{}和[]的最后一个元素后不能包含逗号
-- 待完善功能
-  - 错误提示
+- FigItem根据数据文件的不同可以分为两类
+
+    - 简单表格（参考demo/a.dat，demo/b.dat）
+      - 第一行为标题信息
+
+      - 第一列为对应的x值，第一列第一个元素用于显示x label
+
+      - 其余列为不同组下的y值，每列第一个元素用于显示图例
+
+      - FigItem中需包含
+
+        ```json
+        {
+            "y_label": "", // 纵轴label
+        }
+        ```
+
+    - 数据透视表
+
+      - 很多情况下实验结果文件以数据透视表（pivot table）的形式呈现，即每一行代表一个项目（实验结果），不同的列代表不同的域，如：
+
+        | Name      | Gender | Age  | Cource  | Score |
+        | --------- | ------ | ---- | ------- | ----- |
+        | Zhang San | Male   | 18   | Math    | 100   |
+        | Li Si     | Male   | 19   | Math    | 98    |
+        | Xiao Hong | Female | 20   | English | 95    |
+
+      - ExpFigureTool可以直接根据该格式类型的文件生成实验图
+
+      - 对应的FigItem中需要包含以下项目
+
+        ```json
+        {
+            "file": "", // 数据文件名，同简单表格
+            "pivotTable": true, // 表示数据格式为数据透视表
+            "pivotTable.category": "Gender", // 表示category的列
+            "pivotTable.independentVariable": "Age", // 自变量（x轴）的列
+            "pivotTable.value": "Score", // 因变量（y轴）的列
+            
+            "pivotTable.point": "mean", // 对于每一个点的取值方式，可选mean和median
+            "pivotTable.errorBar": "std" // error bar类型，可选min-max,std,percentile
+        }
+        ```
+
+    - FigItem中的其他常用设置项
+
+      ```json
+      {
+         	"xlabel": "Age", // 将覆盖默认显示的x label
+          "ylabel": "Score", // 将覆盖默认显示的y label
+          "xtick.lim": [0, 0.8], // x轴显示范围
+          "xtick.interval": 0.2, // x轴刻度间隔
+          "ytick.lim": [0, 0.8], // y轴，同上
+          "ytick.interval": 0.2,
+          "marker": false, // 折线图中是否显示数据点，默认为true
+      }
+      ```
+
+      
+
+## 其他功能
+
+- 所有文本支持latex语法，如`$\alpha$`
+- json文件中支持`//`开头作为注释
+- 执行`python run.py a.json`将读取`a.json`，默认为`list.json`
+
+## 待完善功能
+
+- 错误提示
