@@ -14,7 +14,7 @@ ExpFigureTool是快速将实验结果批量生成实验图（折线图，柱状�
 
 - list.json文件中包含一个json数组，这个数组有若干个FigItem组成，每一个FigItem表示由一个数据文件绘制一张实验图
 
-  ```json
+  ```javascript
   [
       {
           // FigItem
@@ -50,7 +50,7 @@ ExpFigureTool是快速将实验结果批量生成实验图（折线图，柱状�
 
       - FigItem中需包含
 
-        ```json
+        ```javascript
         {
             "y_label": "", // 纵轴label
         }
@@ -70,7 +70,7 @@ ExpFigureTool是快速将实验结果批量生成实验图（折线图，柱状�
 
       - 对应的FigItem中需要包含以下项目
 
-        ```json
+        ```javascript
         {
             "file": "", // 数据文件名，同简单表格
             "pivotTable": true, // 表示数据格式为数据透视表
@@ -85,7 +85,7 @@ ExpFigureTool是快速将实验结果批量生成实验图（折线图，柱状�
 
     - FigItem中的其他常用设置项
 
-      ```json
+      ```javascript
       {
          	"xlabel": "Age", // 将覆盖默认显示的x label
           "ylabel": "Score", // 将覆盖默认显示的y label
