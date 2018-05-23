@@ -1,0 +1,38 @@
+{
+  "group1": { // 在很多情况下很多实验图会使用相同的参数，这时可以将FigItem分组
+    "common": { // common中表示共同的参数
+      "file": "demo/pivot_complex.dat",
+      "separator": ",",
+
+      "pivotTable": true,
+      "pivotTable.category": "Dataset",
+      "pivotTable.independentVariable": "Memory", // x axis
+      "pivotTable.value": "Score", // y axis
+      "pivotTable.point": "mean", // default: mean, other: median
+      "pivotTable.errorBar": "min-max",
+
+      // 是否绘制网格
+      "grid.horizontal": true, 
+      "grid.vertical": true
+    },
+    "items": [ // FigItem数组，每一个项目中的key会覆盖common中的同名元素
+      {
+        "output": "demo/pivot_complex_1.pdf",
+        "categories": ["D", "A", "B"] // 可以指定哪些category需要画在图上，同时指定图例的顺序
+      },
+      {
+        "output": "demo/pivot_complex_2.pdf",
+        "categories": {
+          "C": "Cat",
+          "D": "Dog"
+        } // 除了数组外，这一项也可以是dict，key表示在原文件中的名称，value是显示在图例中的名称
+      },
+      {
+        "output": "demo/pivot_complex_3.pdf",
+        "ytick.log": true, // 将纵轴表示成对数坐标轴
+        "xtick.force_non_digit": true, // 有时尽管x轴的值可以被解析成数字，但我们需要按字符串处理（如日期）
+        "xtick.order": ["1", "0.5"] // 在字符串的情况下，我们可能还需要指定它们在x轴上的顺序，同样，可以用这种方式忽略一些点
+      }
+    ]
+  }
+}

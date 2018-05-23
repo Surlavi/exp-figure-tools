@@ -10,7 +10,9 @@ ExpFigureTool是快速将实验结果批量生成实验图（折线图，柱状�
 
 ## 使用教程
 
-- 执行脚本run.py，脚本将读取list.json中的数据列表，根据配置绘制图像
+- 在有了实验数据文件之后，需要编写一个json文件，用来表示如何从实验数据生成实验图，参考`demo/list.json`，具体说明见下
+
+- 执行`python run.py list.json`即可根据`list.json`绘图，
 
 - list.json文件中包含一个json数组，这个数组有若干个FigItem组成，每一个FigItem表示由一个数据文件绘制一张实验图
 
@@ -103,7 +105,7 @@ ExpFigureTool是快速将实验结果批量生成实验图（折线图，柱状�
 
 - 所有文本支持latex语法，如`$\alpha$`
 - json文件中支持`//`开头作为注释
-- 执行`python run.py a.json`将读取`a.json`，默认为`list.json`
+- `demo/complex.json`中包含了更多高级功能的使用方法，可作为参考
 
 ## 待完善功能
 

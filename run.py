@@ -29,7 +29,7 @@ def read_list_file(filename):
                 for item in lt[group]["items"]:
                     nt = copy.copy(common)
                     nt.update(item)
-                    DrawingCore(item['file'], nt)
+                    DrawingCore(nt['file'], nt)
             else:
                 print "Group %s not found." % group
         else:
@@ -40,7 +40,7 @@ def read_list_file(filename):
                 for item in lt[k]["items"]:
                     nt = copy.copy(common)
                     nt.update(item)
-                    DrawingCore(item['file'], nt)
+                    DrawingCore(nt['file'], nt)
     else:
         for item in lt:
             DrawingCore(item['file'], item)
