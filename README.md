@@ -1,11 +1,16 @@
-- 需求：matplotlib, latex环境
-- windows 10 下配置说明
-  - 确认升级到“周年更新版”(1607)，并在“启用或关闭windows功能中”安装linux子系统
-  - 进入bash on ubuntu on windows
-  - 安装matplotlib：sudo apt-get install python-matplotlib
-  - 安装latex环境：sudo apt-get install texlive-full（这一步可能需要很长时间）
-  - enjoy it!
-  - (optional)如果觉得windows自带的cmd不好看的话，可以试试cmder之类的工具
+快速将实验结果批量生成实验图的工具
+
+基于Python 2和[matplotlib](https://matplotlib.org/)
+
+---
+## 环境要求
+- Python 2
+- matplotlib >= 2.0
+- Latex环境
+- Windows下建议使用wsl
+
+## 使用说明
+
 - 执行脚本run.py，脚本将读取list.json中的数据列表，根据配置绘制图像
 - list.json格式
 ```
