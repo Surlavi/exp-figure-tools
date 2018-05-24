@@ -1,9 +1,12 @@
 #coding=utf-8
+from __future__ import print_function
+from future.utils import lmap, lfilter
 import matplotlib
 matplotlib.use('Agg') # reset matplotlib
 
 from chart.data_loader import NormalDataLoader, PivotTableDataLoader
 from matplotlib import pyplot as plt
+from functools import reduce
 import json
 import os
 import numpy as np
@@ -12,24 +15,8 @@ import re
 from collections import OrderedDict
 
 colors = [
-    [
-        "#e41a1c",
-        "#377eb8",
-        "#4daf4a",
-        "#984ea3",
-        "#ff7f00",
-        "#75755c",
-        "#a65628",
-        "#f781bf",
-    ],
-["#8dd3c7",
-# "#ffffb3",
-"#bebada",
-"#fb8072",
-"#80b1d3",
-"#fdb462",
-"#b3de69",
-"#fccde5",]
+    ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#75755c", "#a65628", "#f781bf",],
+    ["#8dd3c7", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5",]
 ]
 
 bar_patterns = ('//', 'xxx', '\\\\', '*', 'o', 'O', '.')
@@ -37,7 +24,7 @@ bar_patterns = ('//', 'xxx', '\\\\', '*', 'o', 'O', '.')
 class DrawingCore:
 
     def __init__(self, filename, settings):
-        print "%s " % filename,
+        print("%s " % filename, end="")
         self.filename = filename
         self.x_points = []
         self.y_points_arr = []
@@ -50,7 +37,8 @@ class DrawingCore:
         self.point_types = ['s-', '^-', 'o-', '*-', 'H-', 'd-', 'h-', '<-', '2-', 'v-']
 
         self.output_file = self.filename.split('.')[0] + '.pdf'
-        if settings.has_key('output'):
+        # if settings.has_key('output'):
+        if 'output' in settings:
             self.output_file = settings['output']
 
         self.draw_data = []
@@ -93,7 +81,8 @@ class DrawingCore:
         self.x_label = self.settings['x_label']
         self.y_label = self.settings['y_label']
         self.rcParams = {}
-        if settings.has_key('rcParams'):
+        if 'rcParams' in settings:
+        # if settings.has_key('rcParams'):
             self.rcParams = settings['rcParams']
 
         self.init_plt()
@@ -144,17 +133,22 @@ class DrawingCore:
         elif self.settings['chart.type'] == 'bar':
             self.draw_bar()
 
-        if self.settings.has_key('xtick.lim'):
+        # if self.settings.has_key('xtick.lim'):
+        if 'xtick.lim' in self.settings:
             plt.xlim(self.settings['xtick.lim'])
-        if self.settings.has_key('ytick.lim'):
+        if 'ytick.lim' in self.settings:
+        # if self.settings.has_key('ytick.lim'):
             plt.ylim(self.settings['ytick.lim'])
-        if self.settings.has_key('xtick.interval'):
+        if 'xtick.interval' in self.settings:
+        # if self.settings.has_key('xtick.interval'):
             start, end = ax.get_xlim()
             ax.xaxis.set_ticks(np.arange(start, end + self.settings['xtick.interval'], self.settings['xtick.interval']))
-        if self.settings.has_key('ytick.interval'):
+        # if self.settings.has_key('ytick.interval'):
+        if 'ytick.interval' in self.settings:
             start, end = ax.get_ylim()
             ax.yaxis.set_ticks(np.arange(start, end + self.settings['ytick.interval'], self.settings['ytick.interval']))
-        if self.settings.has_key('xtick.use_k'):
+        if 'xtick.use_k' in self.settings:
+        # if self.settings.has_key('xtick.use_k'):
             ax.xaxis.set_major_formatter(FuncFormatter(lambda x, y: str(int(x / 1000)) + 'k'))
 
         if self.settings['xtick.log']:
@@ -228,7 +222,7 @@ class DrawingCore:
                     cat = self.settings['categories'][i]
                     cat_name = cat
                 elif type(self.settings['categories']) == OrderedDict:
-                    cat = self.settings['categories'].keys()[i]
+                    cat = list(self.settings['categories'])[i]
                     cat_name = self.settings['categories'][cat]
             else:
                 cat = self.data.categories[i]
@@ -251,7 +245,7 @@ class DrawingCore:
                             y_points.append(points[1][points[0].index(x)])
                 x_points = [map_dict[x] for x in new_xp]
             if i >= len(self.colors):
-                print "too many lines"
+                print("too many lines")
             plt.plot(x_points, y_points, points_type, color=self.colors[i], label=cat_name, alpha=1)
             if self.settings['errorBar']:
                 points_err = self.get_error_data(cat, new_xp)
@@ -340,12 +334,12 @@ class DrawingCore:
 
             # print map(lambda x: x - tot_width / 2 + i * width, xs)
             if not self.settings['errorBar']:
-                bars = plt.bar(map(lambda x: x - tot_width / 2 + i * width + width / 2, x_points), map(lambda x: float(x), y_points),
+                bars = plt.bar(lmap(lambda x: x - tot_width / 2 + i * width + width / 2, x_points), lmap(lambda x: float(x), y_points),
                         width, color=self.bar_colors[i], label=cat_name,
                         )
             else:
                 points_err = self.get_error_data(cat, new_xp)
-                bars = plt.bar(map(lambda x: x - tot_width / 2 + i * width + width / 2, x_points), map(lambda x: float(x), y_points),
+                bars = plt.bar(lmap(lambda x: x - tot_width / 2 + i * width + width / 2, x_points), lmap(lambda x: float(x), y_points),
                         width,
                         color=self.bar_colors[i],
                                # color="white",
@@ -356,7 +350,7 @@ class DrawingCore:
             # for bar in bars:
             #     bar.set_hatch(bar_patterns[i])
         plt.xlim(-0.7, len(xs) - 0.3)
-        plt.xticks(map(lambda x: x, range(0, len(x_points_origin))), x_points_origin)
+        plt.xticks(lmap(lambda x: x, range(0, len(x_points_origin))), x_points_origin)
 
     def output_draw_data(self):
         f = open(self.draw_data_output_file, "w")

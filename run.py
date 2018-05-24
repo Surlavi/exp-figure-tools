@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from __future__ import print_function
+
 from chart import DrawingCore
 import json
 import re
@@ -17,7 +19,7 @@ def read_list_file(filename):
     f.close()
 
     if type(lt) is OrderedDict:
-        print "%s dict detected. Advanced mode..." % filename
+        print("%s dict detected. Advanced mode..." % filename)
         group = None
         if len(sys.argv) >= 3:
             group = sys.argv[2]
@@ -31,7 +33,7 @@ def read_list_file(filename):
                     nt.update(item)
                     DrawingCore(nt['file'], nt)
             else:
-                print "Group %s not found." % group
+                print("Group %s not found." % group)
         else:
             for k in lt:
                 common = {}

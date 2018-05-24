@@ -1,6 +1,8 @@
+from future.utils import lmap, lfilter
 import numpy as np
 import re
 from collections import OrderedDict
+from functools import reduce
 
 
 class DataLoader(object):
@@ -18,10 +20,11 @@ class DataLoader(object):
     def X(self):
         raise NotImplementedError
 
+
 class NormalDataLoader(DataLoader):
     def load(self, data_filename, separator=None):
         f = open(data_filename)
-        self.raw_data = [map(lambda x: x.strip(), x.strip().split(separator)) for x in filter(len, f)]
+        self.raw_data = [lmap(lambda x: x.strip(), x.strip().split(separator)) for x in filter(len, f)]
         self._categories = self.raw_data[0][1:]
         self._X = [x[0] for x in self.raw_data[1:]]
         self.grouped_Y = {}
@@ -48,7 +51,7 @@ class NormalDataLoader(DataLoader):
 class PivotTableDataLoader(DataLoader):
     def load(self, data_filename, separator=None, data_filter=None):
         f = open(data_filename)
-        self.raw_data = [map(lambda x: x.strip(), x.strip().split(separator)) for x in filter(len, f)]
+        self.raw_data = [lmap(lambda x: x.strip(), x.strip().split(separator)) for x in filter(len, f)]
         self.fields = self.raw_data[0]
 
         if type(data_filter) is OrderedDict:
@@ -83,7 +86,7 @@ class PivotTableDataLoader(DataLoader):
         idx = self.fields.index(self.value_field)
         cat_idx = self.fields.index(self.category_field)
         x_idx = self.fields.index(self.indep_var_field)
-        data = filter(lambda x: x[cat_idx] == cat, self.raw_data)
+        data = lfilter(lambda x: x[cat_idx] == cat, self.raw_data)
         # print data
         X = self.X
         ret = []
@@ -111,7 +114,7 @@ class PivotTableDataLoader(DataLoader):
         ret_x = []
 
         for x in X:
-            d = filter(lambda t: t[x_idx] == x, data)
+            d = lfilter(lambda t: t[x_idx] == x, data)
             if len(d) == 0:
                 continue
             ret_x.append(x)
