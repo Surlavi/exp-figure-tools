@@ -23,9 +23,10 @@ bar_patterns = ('//', 'xxx', '\\\\', '*', 'o', 'O', '.')
 
 class DrawingCore:
 
-    def __init__(self, filename, settings):
+    def __init__(self, filename, settings, mode):
         print("%s " % filename, end="")
         self.filename = filename
+        self.mode = mode
         self.x_points = []
         self.y_points_arr = []
         self.x_label = None
@@ -37,13 +38,11 @@ class DrawingCore:
         self.point_types = ['s-', '^-', 'o-', '*-', 'H-', 'd-', 'h-', '<-', '2-', 'v-']
 
         self.output_file = self.filename.split('.')[0] + '.pdf'
-        # if settings.has_key('output'):
         if 'output' in settings:
             self.output_file = settings['output']
 
         self.draw_data = []
         self.draw_data_output_file = ".".join(self.output_file.split('.')[0:-1]) + '.txt'
-        # print self.draw_data_output_file
 
         self.settings = {
             'x_label': None,
@@ -82,7 +81,6 @@ class DrawingCore:
         self.y_label = self.settings['y_label']
         self.rcParams = {}
         if 'rcParams' in settings:
-        # if settings.has_key('rcParams'):
             self.rcParams = settings['rcParams']
 
         self.init_plt()
@@ -96,6 +94,8 @@ class DrawingCore:
         input_str = re.sub(r'\\\n', '', input_str)
         input_str = re.sub(r'//.*\n', '\n', input_str)
         params = json.loads(input_str, object_pairs_hook=OrderedDict)
+        if self.mode == "draft":
+            params.update({'text.usetex': False})
         plt.rcParams.update(params)
         plt.clf()
         f.close()
@@ -133,22 +133,17 @@ class DrawingCore:
         elif self.settings['chart.type'] == 'bar':
             self.draw_bar()
 
-        # if self.settings.has_key('xtick.lim'):
         if 'xtick.lim' in self.settings:
             plt.xlim(self.settings['xtick.lim'])
         if 'ytick.lim' in self.settings:
-        # if self.settings.has_key('ytick.lim'):
             plt.ylim(self.settings['ytick.lim'])
         if 'xtick.interval' in self.settings:
-        # if self.settings.has_key('xtick.interval'):
             start, end = ax.get_xlim()
             ax.xaxis.set_ticks(np.arange(start, end + self.settings['xtick.interval'], self.settings['xtick.interval']))
-        # if self.settings.has_key('ytick.interval'):
         if 'ytick.interval' in self.settings:
             start, end = ax.get_ylim()
             ax.yaxis.set_ticks(np.arange(start, end + self.settings['ytick.interval'], self.settings['ytick.interval']))
         if 'xtick.use_k' in self.settings:
-        # if self.settings.has_key('xtick.use_k'):
             ax.xaxis.set_major_formatter(FuncFormatter(lambda x, y: str(int(x / 1000)) + 'k'))
 
         if self.settings['xtick.log']:
@@ -170,26 +165,9 @@ class DrawingCore:
                    mode=self.settings['legend.mode'], bbox_to_anchor=self.settings['legend.bbox_to_anchor'],
                    handlelength=self.settings['legend.handlelength'],
                    borderpad=0.3)
-        # plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-        #            ncol=2, mode="expand", borderaxespad=0.)
-        # plt.legend(loc='lower right')
 
-        ###
-        # plt.draw()
-        # lbs = ax.get_xmajorticklabels()
-        # for lb in lbs:
-        #     lb.set_text('%s\n\\textcolor{grey}{%s}' % (lb.get_text(), lb.get_text()))
-        # ax.set_xticklabels(lbs)
-        ###
 
         plt.savefig(self.output_file)
-        # output eps
-        # gp = self.output_file.split('.')
-        # if gp[-1] == 'pdf':
-        #     eps_name = ".".join(gp[0:-1]) + ".eps"
-        # else:
-        #     eps_name = self.output_file + ".eps"
-        # plt.savefig(eps_name)
         plt.close()
 
         if self.settings['errorBar']:
@@ -345,7 +323,6 @@ class DrawingCore:
                 bars = plt.bar(lmap(lambda x: x - tot_width / 2 + i * width + width / 2, x_points), lmap(lambda x: float(x), y_points),
                         width,
                         color=self.bar_colors[i],
-                               # color="white",
                         label=cat_name, yerr=points_err, capsize=3,
                         # hatch=bar_patterns[i],
                         edgecolor=[self.bar_colors[i]] * len(x_points) # hack for matplotlib 2.1.0
