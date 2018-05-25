@@ -246,6 +246,9 @@ class DrawingCore:
                 x_points = [map_dict[x] for x in new_xp]
             if i >= len(self.colors):
                 print("too many lines")
+
+            # transform y points to float
+            y_points = lmap(float, y_points)
             plt.plot(x_points, y_points, points_type, color=self.colors[i], label=cat_name, alpha=1)
             if self.settings['errorBar']:
                 points_err = self.get_error_data(cat, new_xp)
