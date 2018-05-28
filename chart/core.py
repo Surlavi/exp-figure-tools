@@ -140,9 +140,13 @@ class DrawingCore:
         if 'xtick.interval' in self.settings:
             start, end = ax.get_xlim()
             ax.xaxis.set_ticks(np.arange(start, end + self.settings['xtick.interval'], self.settings['xtick.interval']))
+        if 'xtick.nbins' in self.settings:
+            ax.locator_params(axis='x', nbins=self.settings['xtick.nbins'])
         if 'ytick.interval' in self.settings:
             start, end = ax.get_ylim()
             ax.yaxis.set_ticks(np.arange(start, end + self.settings['ytick.interval'], self.settings['ytick.interval']))
+        if 'ytick.nbins' in self.settings:
+            ax.locator_params(axis='y', nbins=self.settings['ytick.nbins'])
         if 'xtick.use_k' in self.settings:
             ax.xaxis.set_major_formatter(FuncFormatter(lambda x, y: str(int(x / 1000)) + 'k'))
 

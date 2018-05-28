@@ -90,12 +90,14 @@ ExpFigureTool是快速将实验结果批量生成实验图（折线图，柱状�
 
       ```javascript
       {
-         	"xlabel": "Age", // 将覆盖默认显示的x label
+          "xlabel": "Age", // 将覆盖默认显示的x label
           "ylabel": "Score", // 将覆盖默认显示的y label
           "xtick.lim": [0, 0.8], // x轴显示范围
-          "xtick.interval": 0.2, // x轴刻度间隔
+          "xtick.nbins": 3, // x轴最多显示3个label
+          "xtick.interval": 0.2, // x轴刻度间隔，不可与nbins同用
           "ytick.lim": [0, 0.8], // y轴，同上
           "ytick.interval": 0.2,
+          "ytick.nbins": 5,
           "marker": false, // 折线图中是否显示数据点，默认为true
       }
       ```

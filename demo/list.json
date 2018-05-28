@@ -5,7 +5,8 @@
     "marker": false,
     "data.n_groups": 2,
     "ytick.lim": [0, 1],
-    "ytick.interval": 0.1,
+//    "ytick.interval": 0.1,
+    "ytick.nbins": 3,
     "grid.horizontal": true,
     "grid.vertical": true
   },
