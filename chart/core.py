@@ -7,10 +7,10 @@ matplotlib.use('Agg') # reset matplotlib
 from chart.data_loader import NormalDataLoader, PivotTableDataLoader
 from matplotlib import pyplot as plt
 from matplotlib.ticker import FuncFormatter, ScalarFormatter, NullFormatter, FixedLocator
+import numpy as np
 from functools import reduce
 import json
 import os
-import numpy as np
 import re
 from collections import OrderedDict
 
@@ -92,7 +92,8 @@ class DrawingCore:
         self.draw()
 
     def init_plt(self):
-        f = open(os.path.split(os.path.realpath(__file__))[0] + '/rcParams_' + str(self.settings['style']) + '.json')
+        style_file = os.path.join(os.path.split(os.path.realpath(__file__))[0], '../styles', 'rcParams_' + str(self.settings['style']) + '.json')
+        f = open(style_file)
         input_str = "\n".join(f.readlines())
         input_str = re.sub(r'\\\n', '', input_str)
         input_str = re.sub(r'//.*\n', '\n', input_str)

@@ -1,9 +1,9 @@
 ExpFigureTool是快速将实验结果批量生成实验图（折线图，柱状图）的工具
 
-基于Python 2和[matplotlib](https://matplotlib.org/)
+基于Python和[matplotlib](https://matplotlib.org/)
 
 ## 环境要求
-- Python 2 or 3(test)
+- Python 2 or 3 (python 3支持测试中)
 - matplotlib >= 2.0
 - future库 (`pip install future`)
 - Latex环境
@@ -36,7 +36,7 @@ ExpFigureTool是快速将实验结果批量生成实验图（折线图，柱状�
         "file": "", // 数据文件名
         // 以下信息非必须，有默认值
         "output": "", // 输出文件名，默认为输入文件名后缀换为pdf
-        "style": 1, // 预设的格式，可选1~4，默认为1，分别对应chart文件夹中
+        "style": 1, // 预设的格式，可选1~5，默认为1，分别对应style文件夹中
         "chart.type": "", // 输出图表类型，可选"line"(折线图)或"bar"(柱状图)，默认为折线图
         "separator": "," // 数据分割字符，默认为空白字符（空格、制表符）
     }
