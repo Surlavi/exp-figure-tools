@@ -6,11 +6,11 @@ matplotlib.use('Agg') # reset matplotlib
 
 from chart.data_loader import NormalDataLoader, PivotTableDataLoader
 from matplotlib import pyplot as plt
+from matplotlib.ticker import FuncFormatter, ScalarFormatter, NullFormatter, FixedLocator
 from functools import reduce
 import json
 import os
 import numpy as np
-from matplotlib.ticker import FuncFormatter
 import re
 from collections import OrderedDict
 
@@ -150,14 +150,34 @@ class DrawingCore:
         if 'xtick.use_k' in self.settings:
             ax.xaxis.set_major_formatter(FuncFormatter(lambda x, y: str(int(x / 1000)) + 'k'))
 
+        scalar_formatter = ScalarFormatter()
+        scalar_formatter.set_scientific(False)
+        scalar_formatter.labelOnBase = False
+        null_formatter = NullFormatter()
+        null_formatter.labelOnBase = False
+
         if self.settings['xtick.log']:
             ax.set_xscale('log')
             if self.settings['xtick.log'] != True:
                 ax.set_xscale('log', basex=self.settings['xtick.log'])
+            ax.xaxis.set_major_formatter(scalar_formatter)
+            ax.xaxis.set_minor_formatter(null_formatter)
         if self.settings['ytick.log']:
             ax.set_yscale('log')
             if self.settings['ytick.log'] != True:
                 ax.set_yscale(self.settings['ytick.log'])
+            ax.yaxis.set_major_formatter(scalar_formatter)
+            ax.yaxis.set_minor_formatter(null_formatter)
+
+        if 'xticks' in self.settings:
+            ax.xaxis.set_ticks(self.settings['xticks'], lmap(str, self.settings['xticks']))
+            fixed_locator = FixedLocator(self.settings['xticks'])
+            ax.xaxis.set_major_locator(fixed_locator)
+
+        if 'yticks' in self.settings:
+            ax.yaxis.set_ticks(self.settings['yticks'], lmap(str, self.settings['yticks']))
+            fixed_locator = FixedLocator(self.settings['yticks'])
+            ax.yaxis.set_major_locator(fixed_locator)
 
         ax.xaxis.set_ticks_position('bottom')
         ax.yaxis.set_ticks_position('left')

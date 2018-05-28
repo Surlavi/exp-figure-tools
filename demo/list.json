@@ -4,9 +4,11 @@
     "y_label": "CDF",
     "marker": false,
     "data.n_groups": 2,
-    "ytick.lim": [0, 1],
+//    "ytick.lim": [0.2, 5],
 //    "ytick.interval": 0.1,
-    "ytick.nbins": 3,
+    "ytick.nbins": 2,
+//    "ytick.log": true,
+    "yticks": [0.7, 0.8],
     "grid.horizontal": true,
     "grid.vertical": true
   },
