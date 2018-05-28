@@ -15,9 +15,12 @@ import re
 from collections import OrderedDict
 
 colors = [
+    ['#3399CC', '#99CC33', '#CC0033', '#663399', '#FF9900', '#336666'],
     ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#75755c", "#a65628", "#f781bf",],
     ["#8dd3c7", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5",]
 ]
+
+line_types = ['s-', '^-', 'o-', 'p-', 'H-', 'd-', 'h-', '<-', '2-', 'v-']
 
 bar_patterns = ('//', 'xxx', '\\\\', '*', 'o', 'O', '.')
 
@@ -35,7 +38,7 @@ class DrawingCore:
         self.legends = []
         self.colors = colors[0]
         self.bar_colors = self.colors
-        self.point_types = ['s-', '^-', 'o-', '*-', 'H-', 'd-', 'h-', '<-', '2-', 'v-']
+        self.point_types = line_types
 
         self.output_file = self.filename.split('.')[0] + '.pdf'
         if 'output' in settings:
