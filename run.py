@@ -5,18 +5,26 @@ from matplotlib import __version__ as mpl_version
 from chart import DrawingCore
 import json
 import re
-import sys
+import subprocess
 import copy
 from collections import OrderedDict
 import argparse
 
 
-def env_check():
+def env_check(args):
     # check mpl_version
     t = mpl_version.split('.')
     if int(t[0]) < 2:
         print("matplotlib >= 2.0.0 needed. Now version " + mpl_version + ".")
         exit()
+
+    # check tex environment
+    if args.mode[0] == 'normal':
+        try:
+            subprocess.check_output('tex --version')
+        except subprocess.CalledProcessError:
+            print("Tex not found. Install tex or run in draft mode: `python run.py <json_file> --mode=draft`")
+            exit()
 
 
 def get_args():
@@ -27,8 +35,8 @@ def get_args():
 
 
 def read_list_file():
-    env_check()
     args = get_args()
+    env_check(args)
     filename = args.file
     run_mode = args.mode[0]
 
