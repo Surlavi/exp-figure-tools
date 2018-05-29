@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from __future__ import print_function
+from matplotlib import __version__ as mpl_version
 
 from chart import DrawingCore
 import json
@@ -10,6 +11,14 @@ from collections import OrderedDict
 import argparse
 
 
+def env_check():
+    # check mpl_version
+    t = mpl_version.split('.')
+    if int(t[0]) < 2:
+        print("matplotlib >= 2.0.0 needed. Now version " + mpl_version + ".")
+        exit()
+
+
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('file', nargs='?', help="json file for plot", default="list.json")
@@ -18,12 +27,11 @@ def get_args():
 
 
 def read_list_file():
+    env_check()
     args = get_args()
     filename = args.file
     run_mode = args.mode[0]
-    # print(run_mode)
 
-    # try:
     f = open(filename)
     input_str = "\n".join(f.readlines())
     input_str = re.sub(r'\\\n', '', input_str)
@@ -58,8 +66,6 @@ def read_list_file():
     else:
         for item in lt:
             DrawingCore(item['file'], item, run_mode)
-    # except IOError:
-    #     print("%s not found." % filename)
 
 
 if __name__ == '__main__':
