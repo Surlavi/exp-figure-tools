@@ -75,6 +75,8 @@ class DrawingCore:
             'grid.horizontal': None,
             'grid.vertical': None,
 
+            'lines.alpha': 1,
+
             'categories': False,
 
             'filter': False
@@ -261,12 +263,14 @@ class DrawingCore:
 
             # transform y points to float
             y_points = lmap(float, y_points)
-            plt.plot(x_points, y_points, points_type, color=self.colors[i], label=cat_name, alpha=1)
+            plt.plot(x_points, y_points, points_type, color=self.colors[i], label=cat_name,
+                     alpha=self.settings['lines.alpha'])
             if self.settings['errorBar']:
                 points_err = self.get_error_data(cat, new_xp)
                 # print points_err
                 plt.errorbar(x_points, y_points, yerr=points_err, ecolor=self.colors[i],
-                             color=self.colors[i], alpha=1, fmt="none", elinewidth=3, capsize=5)
+                             color=self.colors[i], alpha=self.settings['lines.alpha'],
+                             fmt="none", elinewidth=3, capsize=5)
 
     def get_error_data(self, cat, x_points):
         points = self.data.grouped_data(cat)

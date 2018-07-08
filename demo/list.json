@@ -9,6 +9,7 @@
     "ytick.nbins": 2,
 //    "ytick.log": true,
     "yticks": [0.7, 0.8],
+    "lines.alpha": 0.7,
     "grid.horizontal": true,
     "grid.vertical": true
   },
