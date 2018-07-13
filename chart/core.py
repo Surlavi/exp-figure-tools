@@ -249,6 +249,15 @@ class DrawingCore:
             new_xp = points[0]
             if is_digit:
                 x_points = [float(x) for x in points[0]]
+
+                # if is digit all data should be sorted
+                tps = []
+                for _ in range(len(x_points)):
+                    tps.append((x_points[_], y_points[_], new_xp[_]))
+                tps = sorted(tps, key=lambda __: __[0])
+                x_points = map(lambda __: __[0], tps)
+                y_points = map(lambda __: __[1], tps)
+                new_xp = map(lambda __: __[2], tps)
             else:
                 if self.settings['xtick.order']:
                     new_xp = []
