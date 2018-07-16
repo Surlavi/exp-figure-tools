@@ -12,6 +12,7 @@ from functools import reduce
 import json
 import os
 import re
+import matplotlib.ticker as ticker
 from collections import OrderedDict
 
 colors = [
@@ -168,17 +169,19 @@ class DrawingCore:
         null_formatter = NullFormatter()
         null_formatter.labelOnBase = False
 
+        log_formatter = ticker.FuncFormatter(lambda y,pos: ('{{:.{:1d}f}}'.format(int(np.maximum(-np.log10(y),0)))).format(y))
+
         if self.settings['xtick.log']:
             ax.set_xscale('log')
             if self.settings['xtick.log'] != True:
                 ax.set_xscale('log', basex=self.settings['xtick.log'])
-            ax.xaxis.set_major_formatter(scalar_formatter)
+            ax.xaxis.set_major_formatter(log_formatter)
             ax.xaxis.set_minor_formatter(null_formatter)
         if self.settings['ytick.log']:
             ax.set_yscale('log')
             if self.settings['ytick.log'] != True:
                 ax.set_yscale(self.settings['ytick.log'])
-            ax.yaxis.set_major_formatter(scalar_formatter)
+            ax.yaxis.set_major_formatter(log_formatter)
             ax.yaxis.set_minor_formatter(null_formatter)
 
         if 'xticks' in self.settings:
