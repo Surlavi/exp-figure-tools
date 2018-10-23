@@ -162,6 +162,8 @@ class DrawingCore:
             ax.locator_params(axis='y', nbins=self.settings['ytick.nbins'])
         if 'xtick.use_k' in self.settings:
             ax.xaxis.set_major_formatter(FuncFormatter(lambda x, y: str(int(x / 1000)) + 'k'))
+        if 'ytick.use_k' in self.settings:
+            ax.yaxis.set_major_formatter(FuncFormatter(lambda x, y: str(int(x / 1000)) + 'k'))
 
         scalar_formatter = ScalarFormatter()
         scalar_formatter.set_scientific(False)
