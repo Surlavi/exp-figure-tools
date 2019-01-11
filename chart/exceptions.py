@@ -1,0 +1,2 @@
+class FigureToolException(Exception):
+    pass

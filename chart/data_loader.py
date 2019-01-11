@@ -3,6 +3,7 @@ import numpy as np
 import re
 from collections import OrderedDict
 from functools import reduce
+from exceptions import FigureToolException
 
 
 class DataLoader(object):
@@ -49,9 +50,28 @@ class NormalDataLoader(DataLoader):
 
 
 class PivotTableDataLoader(DataLoader):
+    @staticmethod
+    def lines2data(lines, separator):
+        ret = []
+        table_width = -1
+        for i in range(0, len(lines)):
+            l = lines[i]
+            if len(l) == 0:
+                pass
+            row = lmap(lambda x: x.strip(), l.strip().split(separator))
+            row_len = len(row)
+            ret.append(row)
+            if table_width == -1:
+                table_width = row_len
+            elif row_len != table_width:
+                msg = "Line %d has %d items, while previous lines has %d items." % (i, row_len, table_width)
+                raise FigureToolException(msg)
+        return ret
+
     def load(self, data_filename, separator=None, data_filter=None):
         f = open(data_filename)
-        self.raw_data = [lmap(lambda x: x.strip(), x.strip().split(separator)) for x in filter(len, f)]
+        # self.raw_data = [lmap(lambda x: x.strip(), x.strip().split(separator)) for x in filter(len, self.raw_lines)]
+        self.raw_data = self.lines2data(f.readlines(), separator)
         self.fields = self.raw_data[0]
 
         if type(data_filter) is OrderedDict:

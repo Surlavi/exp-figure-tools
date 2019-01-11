@@ -5,6 +5,7 @@ import matplotlib
 matplotlib.use('Agg') # reset matplotlib
 
 from chart.data_loader import NormalDataLoader, PivotTableDataLoader
+from exceptions import FigureToolException
 from matplotlib import pyplot as plt
 from matplotlib.ticker import FuncFormatter, ScalarFormatter, NullFormatter, FixedLocator
 import numpy as np
@@ -25,74 +26,77 @@ line_types = ['s-', '^-', 'o-', 'p-', 'H-', 'd-', 'h-', '<-', '2-', 'v-']
 
 bar_patterns = ('//', 'xxx', '\\\\', '*', 'o', 'O', '.')
 
+
 class DrawingCore:
-
     def __init__(self, filename, settings, mode):
-        print("%s " % filename, end="")
-        self.filename = filename
-        self.mode = mode
-        self.x_points = []
-        self.y_points_arr = []
-        self.x_label = None
-        self.y_label = None
-        self.categories = []
-        self.legends = []
-        self.colors = colors[0]
-        self.bar_colors = self.colors
-        self.point_types = line_types
+        try:
+            print("%s " % filename, end="")
+            self.filename = filename
+            self.mode = mode
+            self.x_points = []
+            self.y_points_arr = []
+            self.x_label = None
+            self.y_label = None
+            self.categories = []
+            self.legends = []
+            self.colors = colors[0]
+            self.bar_colors = self.colors
+            self.point_types = line_types
 
-        self.output_file = self.filename.split('.')[0] + '.pdf'
-        if 'output' in settings:
-            self.output_file = settings['output']
+            self.output_file = self.filename.split('.')[0] + '.pdf'
+            if 'output' in settings:
+                self.output_file = settings['output']
 
-        self.draw_data = []
-        self.draw_data_output_file = ".".join(self.output_file.split('.')[0:-1]) + '.txt'
+            self.draw_data = []
+            self.draw_data_output_file = ".".join(self.output_file.split('.')[0:-1]) + '.txt'
 
-        self.settings = {
-            'x_label': None,
-            'y_label': None,
-            'chart.type': 'line',
-            'errorBar': False,
-            'pivotTable': False,
-            'pivotTable.point': 'median',
-            'pivotTable.errorBar': 'min-max',
-            'style': 4,
-            'marker': True,
-            'separator': None,
-            'legend.loc': 'best',
-            'legend.ncol': '1',
-            'legend.mode': None,
-            'legend.bbox_to_anchor': None,
-            'legend.handlelength': None,
+            self.settings = {
+                'x_label': None,
+                'y_label': None,
+                'chart.type': 'line',
+                'errorBar': False,
+                'pivotTable': False,
+                'pivotTable.point': 'median',
+                'pivotTable.errorBar': 'min-max',
+                'style': 4,
+                'marker': True,
+                'separator': None,
+                'legend.loc': 'best',
+                'legend.ncol': '1',
+                'legend.mode': None,
+                'legend.bbox_to_anchor': None,
+                'legend.handlelength': None,
 
-            'data.n_groups': None,
+                'data.n_groups': None,
 
-            'xtick.log': False,
-            'ytick.log': False,
+                'xtick.log': False,
+                'ytick.log': False,
 
-            'xtick.force_non_digit': False,
-            'xtick.order': False,
+                'xtick.force_non_digit': False,
+                'xtick.order': False,
 
-            'grid.horizontal': None,
-            'grid.vertical': None,
+                'grid.horizontal': None,
+                'grid.vertical': None,
 
-            'lines.alpha': 1,
+                'lines.alpha': 1,
 
-            'categories': False,
+                'categories': False,
 
-            'filter': False
-        }
-        self.settings.update(settings)
-        self.x_label = self.settings['x_label']
-        self.y_label = self.settings['y_label']
-        self.rcParams = {}
-        if 'rcParams' in settings:
-            self.rcParams = settings['rcParams']
+                'filter': False
+            }
+            self.settings.update(settings)
+            self.x_label = self.settings['x_label']
+            self.y_label = self.settings['y_label']
+            self.rcParams = {}
+            if 'rcParams' in settings:
+                self.rcParams = settings['rcParams']
 
-        self.init_plt()
-        self.init_data()
+            self.init_plt()
+            self.init_data()
 
-        self.draw()
+            self.draw()
+        except FigureToolException as e:
+            print("error detected:", e)
 
     def init_plt(self):
         style_file = os.path.join(os.path.split(os.path.realpath(__file__))[0], '../styles', 'rcParams_' + str(self.settings['style']) + '.json')
