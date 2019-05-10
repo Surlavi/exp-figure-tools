@@ -12,26 +12,28 @@
         "\\PassOptionsToPackage{no-math}{fontspec}",
         "\\RequirePackage[defaultsups]{newtxtext}",
         "\\RequirePackage[cmintegrals, varg]{newtxmath}",
-        "\\usepackage[T1]{fontenc}"
+        "\\setmainfont{Times New Roman}"
     ],
-//    "mathtext.fontset": "stixsans",
 
     "axes.labelsize": 28,
     "axes.linewidth": 0.75,
 
-    "figure.figsize": [8, 4],
-    "figure.subplot.left": 0.145,
-    "figure.subplot.right": 0.96,
-    "figure.subplot.bottom": 0.18,
+    "figure.figsize": [6, 6],
+    "figure.subplot.left": 0.205,
+    "figure.subplot.right": 0.995,
+    "figure.subplot.bottom": 0.25,
     "figure.subplot.top": 0.96,
     "figure.dpi": 150,
 
-    "font.size": 22,
-    "legend.fontsize": 22,
-    "xtick.labelsize": 22,
-    "ytick.labelsize": 22,
+    "font.size": 24,
+    "legend.fontsize": 24,
+    "xtick.labelsize": 24,
+    "ytick.labelsize": 24,
 
-    "lines.linewidth": 0.1,
-    "lines.markersize": 3,
+    "lines.linewidth": 2,
+    "lines.markersize": 15,
+
+    "errorbar.capsize": 8,
+
     "savefig.dpi": 600
 }

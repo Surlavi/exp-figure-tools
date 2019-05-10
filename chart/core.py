@@ -1,11 +1,13 @@
-#coding=utf-8
+# coding=utf-8
 from __future__ import print_function
 from future.utils import lmap, lfilter
 import matplotlib
-matplotlib.use('Agg') # reset matplotlib
+from matplotlib import __version__ as mpl_version
 
-from chart.data_loader import NormalDataLoader, PivotTableDataLoader
-from exceptions import FigureToolException
+matplotlib.use('Agg')  # reset matplotlib
+
+from .data_loader import NormalDataLoader, PivotTableDataLoader
+from .exceptions import FigureToolException
 from matplotlib import pyplot as plt
 from matplotlib.ticker import FuncFormatter, ScalarFormatter, NullFormatter, FixedLocator
 import numpy as np
@@ -17,9 +19,10 @@ import matplotlib.ticker as ticker
 from collections import OrderedDict
 
 colors = [
+    ['#000000', '#333333', '#666666', '#999999', '#BBBBBB'],
     ['#3399CC', '#99CC33', '#CC0033', '#663399', '#FF9900', '#336666'],
-    ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#75755c", "#a65628", "#f781bf",],
-    ["#8dd3c7", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5",]
+    ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#75755c", "#a65628", "#f781bf", ],
+    ["#8dd3c7", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", ]
 ]
 
 line_types = ['s-', '^-', 'o-', 'p-', 'H-', 'd-', 'h-', '<-', '2-', 'v-']
@@ -74,6 +77,7 @@ class DrawingCore:
 
                 'xtick.force_non_digit': False,
                 'xtick.order': False,
+                'xtick.rotation': 0,
 
                 'grid.horizontal': None,
                 'grid.vertical': None,
@@ -81,6 +85,8 @@ class DrawingCore:
                 'lines.alpha': 1,
 
                 'categories': False,
+
+                'legend': True,
 
                 'filter': False
             }
@@ -90,6 +96,8 @@ class DrawingCore:
             self.rcParams = {}
             if 'rcParams' in settings:
                 self.rcParams = settings['rcParams']
+            else:
+                self.rcParams = {}
 
             self.init_plt()
             self.init_data()
@@ -99,7 +107,8 @@ class DrawingCore:
             print("error detected:", e)
 
     def init_plt(self):
-        style_file = os.path.join(os.path.split(os.path.realpath(__file__))[0], '../styles', 'rcParams_' + str(self.settings['style']) + '.json')
+        style_file = os.path.join(os.path.split(os.path.realpath(__file__))[0], '../styles',
+                                  'rcParams_' + str(self.settings['style']) + '.json')
         f = open(style_file)
         input_str = "\n".join(f.readlines())
         input_str = re.sub(r'\\\n', '', input_str)
@@ -113,7 +122,13 @@ class DrawingCore:
             params.pop('font.monospace')
             params.pop('text.usetex')
             params.pop('text.latex.unicode')
+        matplotlib.use('pgf')
+        mv = mpl_version.split(".")
+        if (mv[0] == "2" and mv[1] >= "2") or mv[0] > "2":
+            if 'text.latex.unicode' in params:
+                params.pop('text.latex.unicode')
         plt.rcParams.update(params)
+        plt.rcParams.update(self.rcParams)
         plt.clf()
         f.close()
 
@@ -121,7 +136,8 @@ class DrawingCore:
         if self.settings['pivotTable']:
             self.data = PivotTableDataLoader()
             self.data.load(self.filename, self.settings['separator'], data_filter=self.settings['filter'])
-            self.data.set_fields(self.settings['pivotTable.category'], self.settings['pivotTable.independentVariable'], self.settings['pivotTable.value'])
+            self.data.set_fields(self.settings['pivotTable.category'], self.settings['pivotTable.independentVariable'],
+                                 self.settings['pivotTable.value'])
             self.data.set_default_func(self.settings['pivotTable.point'])
             if not self.x_label:
                 self.x_label = self.settings['pivotTable.independentVariable']
@@ -142,6 +158,25 @@ class DrawingCore:
             ax.yaxis.grid(False)
         # ax.spines['right'].set_color('none')
         # ax.spines['top'].set_color('none')
+
+        # Set grey scale color
+        cate_num = len(self.data.categories)
+        if self.settings['categories']:
+            cate_num = len(self.settings['categories'])
+        if cate_num != 1:
+            base_val = 192 // (cate_num - 1)
+        else:
+            base_val = 0
+        grey_colors = []
+        for i in range(0, cate_num):
+            color_val = 20 + base_val * i
+            if base_val == 0:
+                color_val = 80
+            color = "#%02x%02x%02x" % (color_val, color_val, color_val)
+            # color = "#%02x%02x%02x" % (color_val, color_val, 128 + color_val // 2)
+            grey_colors.append(color)
+        self.colors = grey_colors
+        self.bar_colors = grey_colors
 
         if self.settings['pivotTable'] and self.settings['pivotTable.errorBar']:
             self.settings['errorBar'] = True
@@ -175,7 +210,8 @@ class DrawingCore:
         null_formatter = NullFormatter()
         null_formatter.labelOnBase = False
 
-        log_formatter = ticker.FuncFormatter(lambda y,pos: ('{{:.{:1d}f}}'.format(int(np.maximum(-np.log10(y),0)))).format(y))
+        log_formatter = ticker.FuncFormatter(
+            lambda y, pos: ('{{:.{:1d}f}}'.format(int(np.maximum(-np.log10(y), 0)))).format(y))
 
         if self.settings['xtick.log']:
             ax.set_xscale('log')
@@ -187,8 +223,12 @@ class DrawingCore:
             ax.set_yscale('log')
             if self.settings['ytick.log'] != True:
                 ax.set_yscale(self.settings['ytick.log'])
-            ax.yaxis.set_major_formatter(log_formatter)
-            ax.yaxis.set_minor_formatter(null_formatter)
+            else:
+                ax.yaxis.set_major_formatter(log_formatter)
+                ax.yaxis.set_minor_formatter(null_formatter)
+        # else:
+        #     fmt = matplotlib.ticker.StrMethodFormatter("{x}")
+        #     ax.yaxis.set_major_formatter(fmt)
 
         if 'xticks' in self.settings:
             ax.xaxis.set_ticks(self.settings['xticks'], lmap(str, self.settings['xticks']))
@@ -206,11 +246,11 @@ class DrawingCore:
         plt.xlabel(self.x_label)
         plt.ylabel(self.y_label)
 
-        plt.legend(loc=self.settings['legend.loc'], ncol=int(self.settings['legend.ncol']),
-                   mode=self.settings['legend.mode'], bbox_to_anchor=self.settings['legend.bbox_to_anchor'],
-                   handlelength=self.settings['legend.handlelength'],
-                   borderpad=0.3)
-
+        if self.settings['legend']:
+            plt.legend(loc=self.settings['legend.loc'], ncol=int(self.settings['legend.ncol']),
+                       mode=self.settings['legend.mode'], bbox_to_anchor=self.settings['legend.bbox_to_anchor'],
+                       handlelength=self.settings['legend.handlelength'],
+                       borderpad=0.3)
 
         plt.savefig(self.output_file)
         plt.close()
@@ -264,9 +304,9 @@ class DrawingCore:
                 for _ in range(len(x_points)):
                     tps.append((x_points[_], y_points[_], new_xp[_]))
                 tps = sorted(tps, key=lambda __: __[0])
-                x_points = map(lambda __: __[0], tps)
-                y_points = map(lambda __: __[1], tps)
-                new_xp = map(lambda __: __[2], tps)
+                x_points = lmap(lambda __: __[0], tps)
+                y_points = lmap(lambda __: __[1], tps)
+                new_xp = lmap(lambda __: __[2], tps)
             else:
                 if self.settings['xtick.order']:
                     new_xp = []
@@ -285,7 +325,7 @@ class DrawingCore:
                      alpha=self.settings['lines.alpha'])
             if self.settings['errorBar']:
                 points_err = self.get_error_data(cat, new_xp)
-                # print points_err
+                # print((x_points)), "\n", len(points_err))
                 plt.errorbar(x_points, y_points, yerr=points_err, ecolor=self.colors[i],
                              color=self.colors[i], alpha=self.settings['lines.alpha'],
                              fmt="none", elinewidth=3, capsize=5)
@@ -313,7 +353,7 @@ class DrawingCore:
         else:
             raise Exception("Error bar function not implemented")
 
-        ret_err = [[],[]]
+        ret_err = [[], []]
         # print points[0].index(u'4')
         # print x_points
         for x in x_points:
@@ -350,8 +390,11 @@ class DrawingCore:
                     cat = self.settings['categories'][i]
                     cat_name = cat
                 elif type(self.settings['categories']) == OrderedDict:
-                    cat = self.settings['categories'].keys()[i]
-                    cat_name = self.settings['categories'][cat]
+                    kvs = list(self.settings['categories'].items())
+                    cat = kvs[i][0]
+                    cat_name = kvs[i][1]
+                    # cat = self.settings['categories'].keys()[i]
+                    # cat_name = self.settings['categories'][cat]
             else:
                 cat = self.data.categories[i]
                 cat_name = cat
@@ -367,26 +410,29 @@ class DrawingCore:
                     if x in points[0]:
                         new_xp.append(x)
                         y_points.append(points[1][points[0].index(x)])
-                x_points = map(lambda xx: map_dict[xx], new_xp)
+                x_points = lmap(lambda xx: map_dict[xx], new_xp)
 
             # print map(lambda x: x - tot_width / 2 + i * width, xs)
             if not self.settings['errorBar']:
-                bars = plt.bar(lmap(lambda x: x - tot_width / 2 + i * width + width / 2, x_points), lmap(lambda x: float(x), y_points),
-                        width, color=self.bar_colors[i], label=cat_name,
-                        )
+                bars = plt.bar(lmap(lambda x: x - tot_width / 2 + i * width + width / 2, x_points),
+                               lmap(lambda x: float(x), y_points),
+                               width, color=self.bar_colors[i], label=cat_name,
+                               )
             else:
                 points_err = self.get_error_data(cat, new_xp)
-                bars = plt.bar(lmap(lambda x: x - tot_width / 2 + i * width + width / 2, x_points), lmap(lambda x: float(x), y_points),
-                        width,
-                        color=self.bar_colors[i],
-                        label=cat_name, yerr=points_err, capsize=3,
-                        # hatch=bar_patterns[i],
-                        edgecolor=[self.bar_colors[i]] * len(x_points) # hack for matplotlib 2.1.0
-                        )
+                bars = plt.bar(lmap(lambda x: x - tot_width / 2 + i * width + width / 2, x_points),
+                               lmap(lambda x: float(x), y_points),
+                               width,
+                               color=self.bar_colors[i],
+                               label=cat_name, yerr=points_err,
+                               # hatch=bar_patterns[i],
+                               edgecolor=[self.bar_colors[i]] * len(x_points)  # hack for matplotlib 2.1.0
+                               )
             # for bar in bars:
             #     bar.set_hatch(bar_patterns[i])
         plt.xlim(-0.7, len(xs) - 0.3)
-        plt.xticks(lmap(lambda x: x, range(0, len(x_points_origin))), x_points_origin)
+        plt.xticks(lmap(lambda x: x, range(0, len(x_points_origin))),
+                   x_points_origin, rotation=self.settings["xtick.rotation"])
 
     def output_draw_data(self):
         f = open(self.draw_data_output_file, "w")

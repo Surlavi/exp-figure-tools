@@ -3,7 +3,7 @@ import numpy as np
 import re
 from collections import OrderedDict
 from functools import reduce
-from exceptions import FigureToolException
+from .exceptions import FigureToolException
 
 
 class DataLoader(object):
